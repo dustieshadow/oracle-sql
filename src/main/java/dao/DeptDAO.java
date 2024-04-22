@@ -10,6 +10,10 @@ import vo.Dept;
 
 public class DeptDAO {
 	// Map 사용
+	
+	
+	
+	
 	public static ArrayList<HashMap<String, Object>> selectDeptOnOffList() 
 														throws Exception {
 		ArrayList<HashMap<String, Object>> list = new ArrayList<>();

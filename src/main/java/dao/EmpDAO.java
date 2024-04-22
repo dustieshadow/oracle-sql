@@ -9,6 +9,95 @@ import java.util.HashMap;
 import vo.Emp;
 
 public class EmpDAO {
+	
+	
+public static ArrayList<HashMap<String, String>> selectJobCaseList()throws Exception {
+		ArrayList<HashMap<String,String>> selectJobCaseList = new ArrayList<>();
+		
+		Connection conn = DBHelper.getConnection();
+		
+	      String sql = "SELECT ename, job, CASE"
+	              + " WHEN job = 'PRESIDENT' THEN '빨강'"
+	              + " WHEN job = 'MANAGER' THEN '주황'"
+	              + " WHEN job = 'ANALYST' THEN '노랑'"
+	              + " WHEN job = 'CLERK' THEN '초록'"
+	              + " ELSE '파랑' END color"
+	              + " FROM emp"
+	              + " ORDER BY CASE"
+	              + " WHEN color = '빨강' THEN 1"
+	              + " WHEN color = '주황' THEN 2"
+	              + " WHEN color = '노랑' THEN 3"
+	              + " WHEN color = '초록' THEN 4"
+	              + " ELSE 5 END ASC";
+
+		
+	
+		
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		
+		ResultSet rs = stmt.executeQuery();
+		
+		while(rs.next()) {
+			HashMap<String, String> m = new HashMap<>();
+			m.put("ename", rs.getString("ename"));
+			m.put("job", rs.getString("job"));
+			m.put("color", rs.getString("color"));
+			selectJobCaseList.add(m);
+		}
+		
+		return selectJobCaseList;
+	}
+	
+	
+	
+	
+	//DeptNo 뒤에 부서별 인원수를 같이 조회하는 메서드
+	public static ArrayList<HashMap<String, Integer>> selectDeptNoCntList() throws Exception{
+		ArrayList<HashMap<String, Integer>> selectDeptNoCntList = new ArrayList<>();
+		
+		String sql = "select deptno deptNo, count(*) cnt from emp where deptno is not null group by deptno order by deptno";
+		
+		Connection conn = DBHelper.getConnection();
+		
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next()) {
+			HashMap<String, Integer> m = new HashMap<>();
+			m.put("deptNo", rs.getInt("deptNo"));
+			m.put("cnt", rs.getInt("cnt"));
+			
+			selectDeptNoCntList.add(m);
+		}
+		conn.close();
+		
+		return selectDeptNoCntList;
+	}
+	
+	
+
+	//중복을 제외한 deptno 목록을 출력하는 메서드
+	
+	public static ArrayList<Integer> selectDeptNoList() throws Exception{
+		ArrayList<Integer> list = new ArrayList<>();
+		
+		Connection conn = DBHelper.getConnection();
+		String sql = "select distinct deptno deptNo from emp where deptno is not null order by deptno";
+		
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next()) {
+			Integer i = rs.getInt("deptNo"); //auto boxting
+			list.add(i);
+		}
+		conn.close();
+		
+		return list;
+	}
+	
+	
+	
+	
 	// 조인으로 Map을 사용하는 겨우
 	public static ArrayList<HashMap<String, Object>> selectEmpAndDeptList()
 													throws Exception {
