@@ -11,6 +11,8 @@ public class Emp {
 	private int deptno;
 	private String pw;
 	private int grade;
+	
+	
 	public int getEmpNo() {
 		return empNo;
 	}
