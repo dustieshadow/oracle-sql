@@ -9,6 +9,38 @@ import java.util.HashMap;
 import vo.Emp;
 
 public class EmpDAO {
+		public static ArrayList<HashMap<String, Integer>> selectEmpSalStates() throws Exception{
+			
+			ArrayList<HashMap<String, Integer>> selectEmpSalStates = new ArrayList<>();
+			
+			Connection conn = DBHelper.getConnection();
+			
+			String sql = "select grade, count(*) count, sum(sal) sum, avg(sal) avg, max(sal) max, min(sal) min from emp group by grade order by grade asc ";
+			
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				HashMap<String, Integer> m = new HashMap<>();
+				m.put("grade", rs.getInt("grade"));
+				m.put("count", rs.getInt("count"));
+				m.put("sum", rs.getInt("sum"));
+				m.put("avg", rs.getInt("avg"));
+				m.put("max", rs.getInt("max"));
+				m.put("min", rs.getInt("min"));
+				selectEmpSalStates.add(m);
+			}
+			
+			conn.close();
+			
+			
+			return selectEmpSalStates;
+			
+		}
+	
+	
 		public static ArrayList<Emp> selectEmpListSort(String col, String sort )throws Exception{
 			
 			//매개값 디버깅
