@@ -9,6 +9,39 @@ import java.util.HashMap;
 import vo.Emp;
 
 public class EmpDAO {
+	
+	public static ArrayList<HashMap<String, Object>> selectEmpSelfManager() throws Exception{
+		
+		ArrayList<HashMap<String, Object>> selectEmpSelfManager = new ArrayList<>();
+		
+		Connection conn = DBHelper.getConnection();
+		
+		String sql = "select e1.empno empNo, e1.ename empName, e1.grade empGrade, nvl(e2.ename, '없음') mgrName, nvl(e2.grade, 0) mgrGrade from emp e1 left outer join emp e2 on e1.mgr = e2.empno order by e1.empno asc";
+		
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		
+		ResultSet rs = stmt.executeQuery();
+		
+		while(rs.next()) {
+			HashMap<String, Object> m = new HashMap<>();
+			m.put("empNo", rs.getInt("empNo"));
+			m.put("empName", rs.getString("empName"));
+			m.put("empGrade", rs.getInt("empGrade"));
+			m.put("mgrName", rs.getString("mgrName"));
+			m.put("mgrGrade", rs.getInt("mgrGrade"));
+		
+			selectEmpSelfManager.add(m);
+		}
+		
+		conn.close();
+		
+		
+		return selectEmpSelfManager;
+		
+	}
+	
+	
+	
 		public static ArrayList<HashMap<String, Integer>> selectEmpSalStates() throws Exception{
 			
 			ArrayList<HashMap<String, Integer>> selectEmpSalStates = new ArrayList<>();
